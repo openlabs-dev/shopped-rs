@@ -23,7 +23,8 @@ backend in a development.
 - Postgres database created with `createdb shopped`
 - Postgres user created and granted access to the database
 - Run `cargo sqlx migrate run`
-  - If you get the error `role "postgres" does not exist`, run `createuser -s postgres`.
+  - If you get the error `role "postgres" does not exist`, run
+    `createuser -s postgres`.
 
 ### Migrating the database
 

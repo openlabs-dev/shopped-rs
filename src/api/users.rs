@@ -4,7 +4,7 @@ use axum::routing::post;
 use axum::{Extension, Json, Router};
 use serde::{Deserialize, Serialize};
 
-use crate::db::{CreateUser, Database};
+use crate::db::{CreateUser, Database, LoginUser};
 
 #[derive(Debug, Deserialize, Serialize)]
 struct ServerResponse<T> {
@@ -79,6 +79,34 @@ async fn register(
   return response::Json(server_response).into_response();
 }
 
-async fn login() -> &'static str {
-  "Login in"
+async fn login(
+  Extension(db): Extension<Database>,
+  Json(login_user): Json<LoginUser>,
+) -> impl IntoResponse {
+  if !login_user.email.contains("@") {
+    return response::Json(ServerResponse::<()> {
+      status: StatusCode::BAD_REQUEST.as_u16(),
+      msg: "The value of the email property must have an @".to_string(),
+      data: None,
+    })
+    .into_response();
+  }
+
+  let user_not_found = db.get_user_by_email(login_user.clone().email).await;
+
+  if user_not_found.is_err() {
+    return response::Json(ServerResponse::<()> {
+      status: StatusCode::NOT_FOUND.as_u16(),
+      msg: "User not found".to_string(),
+      data: None,
+    })
+    .into_response();
+  }
+
+  return response::Json(ServerResponse::<()> {
+    status: StatusCode::ACCEPTED.as_u16(),
+    msg: "Welcome to shopped".to_string(),
+    data: Some(()),
+  })
+  .into_response();
 }
