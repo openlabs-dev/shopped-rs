@@ -19,3 +19,8 @@ pub struct CreateUser {
   pub email: String,
   pub avatar_url: Option<String>,
 }
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct LoginUser {
+  pub email: String,
+}
