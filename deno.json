@@ -1,0 +1,6 @@
+{
+  "name": "@shopped/api",
+  "tasks": {
+    "dev": "deno run --watch main.ts"
+  } 
+}
